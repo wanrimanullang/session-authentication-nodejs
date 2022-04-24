@@ -5,6 +5,7 @@ const { MemoryStore } = require('express-session')
 const session = require('express-session')
 const app = express()
 const PORT = process.env.PORT || 8000
+const userDAO = require('./dao/user')
 
 const sessionStorage = new MemoryStore()
 
@@ -66,4 +67,12 @@ app.get('/product', (req, res) => {
     res.render('pages/product')
 })
 
-app.listen(PORT, () => console.log(`LISTEN ${PORT}`))
+app.listen(PORT, async () => {
+    try{
+        await userDAO.createUserTable()
+        console.log(`Listen to PORT ${PORT}`)
+    }
+    catch(error){
+        console.error(error)
+    }
+})
