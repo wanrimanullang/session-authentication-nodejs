@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+
+<header>
+    <%- include('../partials/header') %> 
+</header>
+
+<div class="bg">
+    <div class="container">
+        <form>
+            <h2>Masuk</h2>
+            <label for="email">Email</label>
+            <input type="text" name="email" required>
+            <div class="email error"></div>
+    
+            <label for="password">Password</label>
+            <input type="password" name="password" required>
+            <div class="password error"></div>
+    
+            <button>Masuk</button>
+            <a href="/signup">Belum punya akun ?</a>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <%- include('../partials/footer') %> 
+</footer>
