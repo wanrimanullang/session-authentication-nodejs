@@ -6,6 +6,9 @@ const session = require('express-session')
 const app = express()
 const PORT = process.env.PORT || 8000
 const userDAO = require('./dao/user')
+const redis = require('redis')
+const redisClient = require('./db/redis')
+const RedisStore = require('connect-redis')(session)
 
 const sessionStorage = new MemoryStore()
 
@@ -16,7 +19,7 @@ app.set('view engine', 'ejs')
 app.use(session({
     name:'admin',
     secret:process.env.SESSION_SECRET,
-    store: sessionStorage,
+    store: new RedisStore({ client: redisClient}),
     saveUninitialized:false,
     resave:false,
     rolling:true,
@@ -28,28 +31,10 @@ app.use(session({
 }))
 
 //end point mengakses dan memodifasi session
-app.get('/cookies', (req,res) => {
-    if(req.session.views){
-        req.session.views++
-        res.send('session increanment')
-    }
-    else{
-        req.session.views = 1 
-        res.send('welcome to session')
-    }
+app.get('/session', (req,res) => {
+    req.session.lastmodified = new Date()
+    res.end
 })
-
-//menampilkan semua session yang tersimpan yang ada di session storage
-app.get('/cek', (req,res,next) => {
-    sessionStorage.all((err, obj) => {
-        if(err){
-            next(err)
-        }
-        console.log(obj)
-        res.send(obj)
-    })
-})
-
 
 app.get('/', (req, res) => {
     res.render('pages/index')
